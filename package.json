@@ -1,0 +1,20 @@
+{
+  "name": "bot-builder-example",
+  "version": "1.0.0",
+  "description": "Example bot builder template and instructions",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "bot",
+    "builder"
+  ],
+  "author": "Karl Turner",
+  "license": "ISC",
+  "dependencies": {
+    "botbuilder": "^3.8.4",
+    "dotenv": "^4.0.0",
+    "restify": "^5.0.1"
+  }
+}
