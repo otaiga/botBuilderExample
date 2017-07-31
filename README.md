@@ -7,7 +7,7 @@ This tutorial walks through building a bot by using:
   - Bot Framework Emulator for testing the bot
 
 ## Get Started
-  - Create an account for use with [LUIS](https://www.luis.ai)
+  - Create an account for [LUIS](https://www.luis.ai)
   - [Node.js](https://nodejs.org/en/) (working with 6.10) installed
   - clone or download this repo
   - From a command prompt or terminal, navigate to the repo folder
@@ -109,7 +109,20 @@ https://region.api.cognitive.microsoft.com/luis/v2.0/apps/made-up-code-?subscrip
 
 ## Update the code
 
-  - TODO: add about the .env file here..
+Create a `.env` file in your root directory and paste your LUIS URL in the below format (as in the .env_example)
+
+```
+
+ENDPOINT_URL='https://region.api.cognitive.microsoft.com/luis/v2.0/apps/made-up-code-?subscription-key=somekeyto use&staging=true&verbose=true&timezoneOffset=0&q='
+
+```
+
+The code will use this URL as a recognizer, which can be seen from within the `app.js file`
+
+```
+const recognizer = new builder.LuisRecognizer(process.env.ENDPOINT_URL);
+
+```
 
 ## Test your bot
 
@@ -124,3 +137,57 @@ To listen to your bot, the default endpoint url would be: `http://127.0.0.1:3978
 After installing the emulator, navigate to your bot's directory in a console window and start your bot:
 
  - type `node app.js`
+
+## Add more to your bot
+
+You can start adding more functionality to your bot, for example, remembering your name.
+
+There is code already within this example that checks for a username:
+
+```
+// greet user
+bot.dialog('greet', [
+  (session, args, next) => {
+    if (userName(session)) {
+      return next({response: userName(session)});
+    }
+    builder.Prompts.text(session, 'Before get started, can you please tell me your name?')
+  },
+  (session, results) => {
+    session.userData.username = results.response;
+    return session.endDialog(`Hi ${results.response}`);
+  }
+]);
+
+```
+
+The above dialog allows the bot to ask for the name of the user and stores the response into the session data `session.userData` for later use.
+
+We can then `greet` the user via other dialogs as in the help dialog:
+
+```
+// dialog that match a help intent
+bot.dialog('help', [
+  (session) =>
+    session.beginDialog('greet'),
+  (session) =>
+  session.endDialog(helpMessage),
+]).triggerAction({
+  matches: 'help'
+});
+
+```
+
+### Reset
+
+If you want the bot to forget your name, add a new `reset` intent to your LUIS application as described within the earlier sections of this readme and add utterances like the following:
+
+  - reset memory
+  - forget
+  - forget my name
+  - reset my name
+  - reset
+
+Train the intent and select `Publish App` from the menu on the left hand side of the LUIS app.
+
+Then test it out!
