@@ -25,7 +25,9 @@ The code basically allows you to do the following:
   - Responds back to the user with hopefully what the user asked for.
 
 If we test the bot now (descibed in the below sections), then we wont get very far as the intents are never matched.
-You would always get the default response: `Sorry, I did not understand ${session.message.text}. Type help if you need assistance.`
+You would always get the default response: `Type help if you need assistance.`
+
+(Although it will ask for your name, which is explained in the below sections).
 
 In order to get this all working with LUIS we need to first create a LUIS app.
 
@@ -96,7 +98,7 @@ Train you application again and after it has finished you should be able to test
 If your happy with your intent, we can select `Publish App` from the menu on the left hand side.
 
   - Select the BootStrapKey as the Endpoint Key
-  - Change the Endpoint slot to `staging` under Publish settings
+  - Change the Endpoint slot to `Staging` under Publish settings
   - Hit Publish!
 
 You should now have an endpoint URL that we can copy and use inside our code!
@@ -146,7 +148,7 @@ There is code already within this example that checks for a username:
 
 ```
 // greet user
-bot.dialog('greet', [
+bot.dialog('greeter', [
   (session, args, next) => {
     if (userName(session)) {
       return next({response: userName(session)});
@@ -180,14 +182,17 @@ bot.dialog('help', [
 
 ### Reset
 
-If you want the bot to forget your name, add a new `reset` intent to your LUIS application as described within the earlier sections of this readme and add utterances like the following:
+A `reset` dialog exists in the code that matches the specific `reset` request by the user.
 
-  - reset memory
-  - forget
-  - forget my name
-  - reset my name
-  - reset
+```
+// reset bot dialog
+bot.dialog('reset', (session) => {
+  // reset data
+  delete session.userData.username;
+  session.endDialog('Oops... I\'m suffering from a memory loss...');
+}).triggerAction({
+  matches: /^reset/i
+});
+```
 
-Train the intent and select `Publish App` from the menu on the left hand side of the LUIS app.
-
-Then test it out!
+Type `reset` into the emulator and your bot will forget who you are.

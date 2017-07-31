@@ -36,9 +36,9 @@ const userName = session =>
 // This allows the bot to easily walk a user through a series of tasks.
 const bot = new builder.UniversalBot(connector, [
   (session) =>
-    session.beginDialog('greet'),
+    session.beginDialog('greeter'),
   (session) =>
-    session.endDialog(`${helpMessage}. Type help if you need assistance.`),
+    session.endDialog('Type help if you need assistance.'),
 ]);
 
 // add the LUIS recognizer to the bot
@@ -66,9 +66,9 @@ const getRandomJoke = () =>
 // This allows the bot to easily walk a user through a series of tasks.
 bot.dialog('help', [
   (session) =>
-    session.beginDialog('greet'),
+    session.beginDialog('greeter'),
   (session) =>
-  session.endDialog(helpMessage),
+  session.endDialog(`You need help? ${helpMessage}`),
 ]).triggerAction({
   matches: 'help'
 });
@@ -86,20 +86,20 @@ bot.dialog('joke', (session) => {
 });
 
 // greet user
-bot.dialog('greet', [
+bot.dialog('greeter', [
   (session, args, next) => {
     if (userName(session)) {
       // If user exists auto execute the next step in the waterfall.
       return next({response: userName(session)});
     }
     // Ask the user a question
-    builder.Prompts.text(session, 'Before get started, can you please tell me your name?')
+    builder.Prompts.text(session, 'Before get started, can you please tell me your name?');
   },
   (session, results) => {
     // Assign the user's name response to the session data
     session.userData.username = results.response;
-    return session.endDialog(`Hi ${results.response}`);
-  }
+    session.endDialog(`Hi ${results.response}`);
+  },
 ]);
 
 // reset bot dialog
