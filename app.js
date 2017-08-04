@@ -61,10 +61,9 @@ bot.recognizer(recognizer);
 const jokes = [
   { question: 'What do you get when you cross a snowman and a vampire?', answer: 'Frostbite!' },
   { question: 'What do elves learn in school?', answer: 'The elf-abet' },
-  { question: 'Why are seaguls called seagulls?', answer: 'Beacause if they flew over the bay, they would be bagels!' },
+  { question: 'Why are seagulls called seagulls?', answer: 'Because if they flew over the bay, they would be bagels!' },
   { question: 'How do you make a tissue dance?', answer: 'You put a little boogie in it' },
 ];
-
 
 const helpMessage = 'Try asking me things like tell me a joke';
 
